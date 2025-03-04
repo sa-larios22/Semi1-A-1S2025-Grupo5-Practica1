@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js" // Para Node.js
+}
+
+generator pyclient {
+  provider = "prisma-client-py" // Para Python
+}
+
+datasource db {
+  provider = "postgresql" // Puede cambiarse a MySQL si es necesario
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  firstName      String
+  lastName       String
+  email          String   @unique
+  password       String
+  profilePicture String?  // URL de la imagen en S3
+  birthDate      DateTime
+  role           Role     @default(USER)
+  purchases      Purchase[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Book {
+  id          Int      @id @default(autoincrement())
+  title       String
+  author      String
+  coverImage  String   // URL de la portada en S3
+  synopsis    String?
+  categories  Json     // Array de categorías
+  year        Int
+  pdfUrl      String   // URL del archivo en S3
+  purchases   Purchase[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Purchase {
+  id         Int      @id @default(autoincrement())
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int
+  book       Book    @relation(fields: [bookId], references: [id])
+  bookId     Int
+  purchaseDate DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
