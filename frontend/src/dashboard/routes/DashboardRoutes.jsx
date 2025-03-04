@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom"
-import { AdminBooks, Book, Books, Home, Profile } from "../pages"
+import { AdminBooks, Book, Books, Home, Profile, SearchBooks } from "../pages"
 import { Layout } from "../Layout"
 export const DashboardRoutes = () => {
 
@@ -9,7 +9,8 @@ export const DashboardRoutes = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/admin-books" element={<AdminBooks />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/book" element={<Book />} />
+                <Route path="/book/:id" element={<Book />} />
+                <Route path="/search/:term" element={<SearchBooks />} />
                 <Route path="/books" element={<Books />} />
             </Routes>
         </Layout>

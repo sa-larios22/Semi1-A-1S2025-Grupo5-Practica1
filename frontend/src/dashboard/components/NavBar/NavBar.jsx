@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, TextField, Toolbar, Tooltip, Typography } from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from "react-router-dom";
 
 const settings = ['Logout'];
 
 export const NavBar = () => {
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const navigate = useNavigate();
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -15,6 +17,7 @@ export const NavBar = () => {
         setAnchorElUser(null);
     };
   
+
     return (
   
         <AppBar position="fixed"
@@ -64,6 +67,7 @@ export const NavBar = () => {
                     <IconButton 
                         aria-label="search"
                         sx={{ p: 2, color: 'black', ml: 1 }}
+                        onClick={() => navigate(`/search/${document.getElementById('search').value}`)}
                     >
                         <SearchIcon />
                     </IconButton>
