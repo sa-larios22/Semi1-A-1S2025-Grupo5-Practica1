@@ -86,6 +86,48 @@ export const bookSlice = createSlice({
                 category: ['Novel', 'Fiction', 'Classic']
             }
         ],
+        userBooks: [
+            {
+                id: 1,
+                title: 'The Great Gatsby',
+                author: 'F. Scott Fitzgerald',
+                image: '../../../public/cover_book.png',
+                description: 'The Great Gatsby is a novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, near New York City, the novel depicts first-person narrator Nick Carraway\'s interactions with mysterious millionaire Jay Gatsby and Gatsby\'s obsession to reunite with his former lover, Daisy Buchanan.',
+                category: ['Novel', 'Fiction', 'Classic']
+            },
+            {
+                id: 3,
+                title: 'To Kill a Mockingbird',
+                author: 'Harper Lee',
+                image: '../../../public/cover_book.png',
+                description: 'To Kill a Mockingbird is a novel by Harper Lee published in 1960. Instantly successful, widely read in high schools and middle schools in the United States, it has become a classic of modern American literature, winning the Pulitzer Prize.',
+                category: ['Novel', 'Fiction', 'Classic']
+            },
+            {
+                id: 6,
+                title: 'The Diary of a Young',
+                author: 'Anne Frank',
+                image: '../../../public/cover_book.png',
+                description: 'The Diary of a ',
+                category: ['Novel', 'Fiction', 'Classic']
+            },
+            {
+                id: 8,
+                title: 'The Lord of the Rings',
+                author: 'J.R.R. Tolkien',
+                image: '../../../public/cover_book.png',
+                description: 'The Lord of the Rings is an epic high-fantasy novel written by English author and scholar J. R. R. Tolkien. The story began as a sequel to Tolkien\'s 1937 fantasy novel The Hobbit, but eventually developed into a much larger work.',
+                category: ['Novel', 'Fiction', 'Classic']
+            },
+            {
+                id: 9,
+                title: 'The Kite Runner',
+                author: 'Khaled Hosseini',
+                image: '../../../public/cover_book.png',
+                description: 'The Kite Runner is the first novel by Afghan-American author Khaled Hosseini. Published in 2003 by Riverhead Books, it tells the story',
+                category: ['Novel', 'Fiction', 'Classic']
+            }
+        ],
         book: {},
         loading: false,
         error: null
@@ -103,6 +145,10 @@ export const bookSlice = createSlice({
             state.book = payload;
             state.loading = false;
         },
+        onGetUserBooks: (state, { payload }) => {
+            state.userBooks = payload;
+            state.loading = false;
+        },
         onError: (state, { payload }) => {
             state.error = payload;
             state.loading = false;
@@ -110,4 +156,4 @@ export const bookSlice = createSlice({
     }
 });
 
-export const { onLoading, onGetBooks, onGetBook, onError } = bookSlice.actions;
+export const { onLoading, onGetBooks, onGetBook, onGetUserBooks, onError } = bookSlice.actions;

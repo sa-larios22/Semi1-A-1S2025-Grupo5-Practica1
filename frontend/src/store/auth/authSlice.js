@@ -16,7 +16,6 @@ export const authSlice = createSlice({
             lastname: 'Google',
             email: 'admin@google.com',
             role: 'admin',
-            books: [2, 5, 7, 8, 10]
         }
     },
     reducers: {
