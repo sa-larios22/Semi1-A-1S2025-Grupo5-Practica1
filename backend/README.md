@@ -4,8 +4,10 @@ Esta API permite gestionar una plataforma de libros electrónicos con funcionali
 
 ## 📌 Base URL
 ```
-https://loadbalancer-domain.com:5000/api
+http://localhost:5000/api
 ```
+
+---
 
 ## 📌 Endpoints Disponibles
 
@@ -18,23 +20,23 @@ https://loadbalancer-domain.com:5000/api
 ### **🔹 Usuarios**
 | **Método** | **Endpoint** | **Descripción** |
 |------------|-------------|----------------|
-| `GET` | `/users/me` | Obtener perfil del usuario autenticado |
-| `PUT` | `/users/me` | Actualizar perfil del usuario |
+| `GET` | `/users/me?email={email}` | Obtener perfil del usuario |
+| `PUT` | `/users/me?email={email}` | Actualizar perfil del usuario |
 
 ### **🔹 Libros**
 | **Método** | **Endpoint** | **Descripción** |
 |------------|-------------|----------------|
 | `GET` | `/books` | Listar todos los libros |
 | `GET` | `/books/{book_id}` | Obtener detalles de un libro |
-| `POST` | `/books/{book_id}/purchase` | Adquirir un libro |
-| `GET` | `/users/me/books` | Listar los libros adquiridos por el usuario |
+| `POST` | `/books` | Agregar un nuevo libro (Admin) |
+| `PUT` | `/books/{book_id}` | Modificar un libro (Admin) |
+| `DELETE` | `/books/{book_id}` | Eliminar un libro (Admin) |
 
-### **🔹 Administración de libros (Solo Admin)**
+### **🔹 Compras**
 | **Método** | **Endpoint** | **Descripción** |
 |------------|-------------|----------------|
-| `POST` | `/admin/books` | Agregar un libro |
-| `PUT` | `/admin/books/{book_id}` | Modificar un libro |
-| `DELETE` | `/admin/books/{book_id}` | Eliminar un libro |
+| `POST` | `/purchases` | Adquirir un libro |
+| `GET` | `/purchases/{user_id}` | Listar los libros adquiridos por el usuario |
 
 ---
 
@@ -44,18 +46,20 @@ https://loadbalancer-domain.com:5000/api
 #### 📥 Request (JSON)
 ```json
 {
-  "first_name": "Juan",
-  "last_name": "Pérez",
+  "firstName": "Juan",
+  "lastName": "Pérez",
   "email": "juan@example.com",
   "password": "123456",
-  "profile_picture": "https://s3.amazonaws.com/ebookvault/profile.jpg",
-  "birth_date": "2000-05-15"
+  "birthDate": "1995-05-20",
+  "profilePicture": "https://example.com/profile.jpg",
+  "role": "USER"
 }
 ```
 #### 📤 Response (201 Created)
 ```json
 {
-  "message": "User registered successfully"
+  "message": "User registered successfully",
+  "user_id": 1
 }
 ```
 
@@ -72,13 +76,14 @@ https://loadbalancer-domain.com:5000/api
 #### 📤 Response (200 OK)
 ```json
 {
+  "message": "Login successful",
   "user": {
     "id": 1,
-    "first_name": "Juan",
-    "last_name": "Pérez",
+    "firstName": "Juan",
+    "lastName": "Pérez",
     "email": "juan@example.com",
-    "profile_picture": "https://s3.amazonaws.com/ebookvault/profile.jpg",
-    "role": "user"
+    "profilePicture": "https://example.com/profile.jpg",
+    "role": "USER"
   }
 }
 ```
@@ -90,11 +95,12 @@ https://loadbalancer-domain.com:5000/api
 ```json
 {
   "id": 1,
-  "first_name": "Juan",
-  "last_name": "Pérez",
+  "firstName": "Juan",
+  "lastName": "Pérez",
   "email": "juan@example.com",
-  "profile_picture": "https://s3.amazonaws.com/ebookvault/profile.jpg",
-  "books_purchased": 3
+  "profilePicture": "https://example.com/profile.jpg",
+  "birthDate": "1995-05-20",
+  "role": "USER"
 }
 ```
 
@@ -106,17 +112,13 @@ https://loadbalancer-domain.com:5000/api
 [
   {
     "id": 1,
-    "title": "El Principito",
-    "author": "Antoine de Saint-Exupéry",
-    "cover_image": "https://s3.amazonaws.com/ebookvault/covers/el_principito.jpg",
-    "available": true
-  },
-  {
-    "id": 2,
-    "title": "1984",
-    "author": "George Orwell",
-    "cover_image": "https://s3.amazonaws.com/ebookvault/covers/1984.jpg",
-    "available": false
+    "title": "Cien años de soledad",
+    "author": "Gabriel García Márquez",
+    "coverImage": "https://example.com/cien_años.jpg",
+    "synopsis": "Historia de la familia Buendía...",
+    "categories": {"genero": "Ficción", "tema": "Historia familiar"},
+    "year": 1967,
+    "pdfUrl": "https://example.com/cien_años.pdf"
   }
 ]
 ```
@@ -129,18 +131,57 @@ https://loadbalancer-domain.com:5000/api
 {
   "title": "Cien años de soledad",
   "author": "Gabriel García Márquez",
-  "cover_image": "https://s3.amazonaws.com/ebookvault/covers/cien_años.jpg",
+  "coverImage": "https://example.com/cien_años.jpg",
   "synopsis": "Historia de la familia Buendía...",
-  "categories": ["Realismo Mágico", "Novela"],
+  "categories": {"genero": "Ficción", "tema": "Historia familiar"},
   "year": 1967,
-  "pdf_url": "https://s3.amazonaws.com/ebookvault/books/cien_años.pdf"
+  "pdfUrl": "https://example.com/cien_años.pdf"
 }
 ```
 #### 📤 Response (201 Created)
 ```json
 {
-  "message": "Book added successfully"
+  "message": "Book added successfully",
+  "book_id": 1
 }
+```
+
+---
+
+### **📝 Comprar un libro**
+#### 📥 Request (JSON)
+```json
+{
+  "userId": 1,
+  "bookId": 1
+}
+```
+#### 📤 Response (201 Created)
+```json
+{
+  "message": "Purchase successful",
+  "purchase_id": 1
+}
+```
+
+---
+
+### **📝 Listar compras de un usuario**
+#### 📤 Response (200 OK)
+```json
+[
+  {
+    "purchase_id": 1,
+    "purchaseDate": "2025-03-05T14:30:00",
+    "book": {
+      "id": 1,
+      "title": "Cien años de soledad",
+      "author": "Gabriel García Márquez",
+      "coverImage": "https://example.com/cien_años.jpg",
+      "pdfUrl": "https://example.com/cien_años.pdf"
+    }
+  }
+]
 ```
 
 ---
