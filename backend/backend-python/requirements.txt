@@ -1,3 +1,8 @@
 fastapi
 uvicorn
 prisma
+bcrypt
+pydantic
+psycopg2
+sqlalchemy
+python-dotenv
