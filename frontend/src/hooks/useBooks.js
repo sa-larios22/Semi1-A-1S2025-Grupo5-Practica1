@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { onError, onGetBook, onLoading } from '../store';
+import { onError, onGetBook, onLoading, onGetUserBooks } from '../store';
 
 export const useBooks = () => {
 
-    const { books, book, loading, error } = useSelector(state => state.books);
+    const { books, book, loading, error, userBooks } = useSelector(state => state.books);
     const dispatch = useDispatch();
 
     const startGetBook = async(id) => {
@@ -25,12 +25,32 @@ export const useBooks = () => {
         }
     }
 
+    const startGetUserBooks = async() => {
+        
+        dispatch(onLoading());
+
+        try {
+            // const { data } = await appApi.get(`/books/${id}`);
+
+            const userBooks = books.filter(book => userBooks.includes(book.id));
+
+            dispatch( 
+                onGetUserBooks(userBooks)
+            );
+
+        } catch (error) {
+            dispatch(onError(error));
+        }
+    }
+
 
     return {
         books,
         book,
         loading,
+        userBooks,
         error,
-        startGetBook
+        startGetBook,
+        startGetUserBooks
     }
 }

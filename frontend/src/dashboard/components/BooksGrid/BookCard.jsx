@@ -1,12 +1,11 @@
-import { useAuth, useBooks } from "../../../hooks";
+import { useBooks } from "../../../hooks";
 import { Box, Chip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from "react-router-dom";
 
 export const BookCard = ({ book }) => {
 
-    const { user } = useAuth();
-    const { startGetBook } = useBooks();
+    const { startGetBook, userBooks } = useBooks();
     const navigate = useNavigate();
 
     const slugBook = book.title.toLowerCase().replace(/ /g, '-');
@@ -62,7 +61,8 @@ export const BookCard = ({ book }) => {
                     {book.author}
                 </Typography>
                 {
-                    (user && user.books.includes(book.id)) &&
+                    // Check if the book is already added to the user's list [{}, {}]
+                    userBooks.some((userBook) => userBook.id === book.id) &&
                     (
                         <Chip 
                             label="Agregado"
