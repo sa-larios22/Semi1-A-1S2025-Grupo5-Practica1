@@ -1,7 +1,7 @@
 import React from 'react'
 import { useBooks } from '../../hooks';
 import Grid from '@mui/material/Grid2';
-import { Box, Button, Chip, Stack, Typography } from '@mui/material';
+import { Button, Chip, Stack, Typography } from '@mui/material';
 import { generateRandomColor } from '../../helpers';
 
 export const Book = () => {

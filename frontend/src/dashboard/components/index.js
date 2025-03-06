@@ -1,3 +1,4 @@
+export * from './AdminCardBook';
 export * from './BooksGrid';
 export * from './ModalFilterBooks';
 export * from './MyBookCard';
