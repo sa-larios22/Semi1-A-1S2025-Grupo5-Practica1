@@ -13,7 +13,7 @@ export class S3Controller {
     @UploadedFile() file: Express.Multer.File,
     @Param('folder') folder: string
     ) {
-    console.log('Archivo recibido:', file); // 👀 Verifica si llega el archivo
+    console.log('Archivo recibido:', file); 
     if (!file) {
         throw new BadRequestException('No se recibió ningún archivo');
     }
