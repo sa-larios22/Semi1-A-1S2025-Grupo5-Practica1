@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { S3Module } from './s3.module'; 
 
@@ -6,6 +7,7 @@ import { S3Module } from './s3.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),  // Carga el .env
     S3Module, 
+    AuthModule,
   ],
 })
 export class AppModule {}
