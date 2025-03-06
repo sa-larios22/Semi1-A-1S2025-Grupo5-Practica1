@@ -62,7 +62,6 @@ export class AuthService {
       throw new HttpException('Credenciales incorrectas', HttpStatus.BAD_REQUEST);
     }
 
-    // Aquí se puede generar un token JWT, si es necesario
     const token = this.jwtService.sign({ userId: user.id });
 
     return {

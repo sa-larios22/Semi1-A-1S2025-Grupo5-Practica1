@@ -1,0 +1,12 @@
+**Carga, Modificacion y Borrado Libros
+**Credenciales USER IAM
+**Agregar en .env
+AWS_REGION: ---
+AWS_ACCESS_KEY_ID: ---
+AWS_SECRET_ACCESS_KEY: ----
+AWS_BUCKET_NAME: ------
+
+
+
+create-book.dto.ts
+* npm install class-validator
