@@ -6,3 +6,6 @@ pydantic
 psycopg2
 sqlalchemy
 python-dotenv
+botocore
+boto3
+python-multipart

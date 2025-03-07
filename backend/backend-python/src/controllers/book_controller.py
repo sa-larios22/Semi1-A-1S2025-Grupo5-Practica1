@@ -1,8 +1,8 @@
 import json  # Importamos JSON para manejar correctamente los datos
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 from prisma import Prisma
-from typing import List
+from typing import List, Optional
 
 router = APIRouter()
 db = Prisma()
@@ -53,6 +53,34 @@ async def get_books():
     await db.disconnect()
 
     # Verificar si categories es un string antes de convertirlo a dict
+    for book in books:
+        if isinstance(book.categories, str):
+            book.categories = json.loads(book.categories)
+
+    return books
+
+# buscar titulo por  synopsis like
+@router.get("/books/search")
+async def search_books(
+    title: Optional[str] = Query(None), 
+    synopsis: Optional[str] = Query(None),
+    response_model=List[BookResponse]
+):
+    """Buscar libros por título y/o sinopsis"""
+    await db.connect()
+
+    filters = {}
+
+    if title:
+        filters["title"] = {"contains": title}
+    if synopsis:
+        filters["synopsis"] = {"contains": synopsis}
+
+    books = await db.book.find_many(where=filters)
+    
+    await db.disconnect()
+
+    # Convertir categories de string a dict si es necesario
     for book in books:
         if isinstance(book.categories, str):
             book.categories = json.loads(book.categories)
@@ -123,3 +151,6 @@ async def delete_book(book_id: int):
         raise HTTPException(status_code=400, detail="No se pudo eliminar el libro")
 
     return {"message": "Libro eliminado exitosamente"}
+
+
+
