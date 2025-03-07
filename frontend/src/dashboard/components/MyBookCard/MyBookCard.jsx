@@ -6,7 +6,12 @@ export const MyBookCard = ({ book }) => {
     const { startReadBook } = useBooks();
 
     const handleBookClick = async() => {
-        startReadBook(book.id);
+        console.log(book.pdfUrl)
+        if (book.pdfUrl) {
+            window.open(`https://docs.google.com/gview?url=${encodeURIComponent(book.pdfUrl)}&embedded=true`, '_blank');
+        } else {
+            startReadBook(book.id);
+        }
     }
   
     return (
