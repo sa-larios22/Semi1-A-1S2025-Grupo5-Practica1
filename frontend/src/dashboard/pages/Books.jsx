@@ -2,16 +2,24 @@ import { Box } from "@mui/material"
 import Grid from '@mui/material/Grid2';
 import { useBooks } from "../../hooks";
 import { MyBookCard } from "../components";
+import { useEffect } from "react";
 
 export const Books = () => {
 
-  const { userBooks } = useBooks();
+  const { userBooks, startGetUserBooks, startGetBooks } = useBooks();
+
+  useEffect(() => {
+    startGetUserBooks();
+    startGetBooks();
+  }
+  , []);
+
+
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
       }}
     >
       <Grid

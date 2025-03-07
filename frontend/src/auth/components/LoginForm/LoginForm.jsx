@@ -1,8 +1,22 @@
 import { Box, Button, Link, TextField, Typography } from '@mui/material'
 import React from 'react'
+import { useAuth, useForm } from '../../../hooks'
+
+const loginFields = {
+    email: '',
+    password: '',
+}
 
 export const LoginForm = () => {
+
+    const { email, password, onInputChange } = useForm(loginFields);
+    const { startLogin } = useAuth();
   
+    const onLogin = (e) => {
+        e.preventDefault();
+        startLogin({ email, password });
+    }
+
     return (
         <Box
             sx={{
@@ -26,14 +40,22 @@ export const LoginForm = () => {
             <TextField
                 label="email" 
                 variant="outlined" 
+                value={email}
+                onChange={onInputChange}
+                name='email'
             />
 
             <TextField
                 label="password"
                 variant="outlined"
+                value={password}
+                onChange={onInputChange}
+                name='password'
             />
 
-            <Button variant="contained">
+            <Button variant="contained"
+                onClick={onLogin}
+            >
                 Login
             </Button>
 

@@ -2,9 +2,11 @@ generator client {
   provider = "prisma-client-js" // Para Node.js
 }
 
+/*
 generator pyclient {
-  provider = "prisma-client-py" // Para Python
+  provider = "prisma-client-py"
 }
+*/
 
 datasource db {
   provider = "postgresql" // Puede cambiarse a MySQL si es necesario

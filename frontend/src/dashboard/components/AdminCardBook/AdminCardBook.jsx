@@ -1,4 +1,4 @@
-import { IconButton, Stack, Typography } from '@mui/material';
+import { Box, Chip, IconButton, Stack, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,12 +8,18 @@ import { useBooks } from '../../../hooks';
 export const AdminCardBook = ({ book }) => {
 
     const navigate = useNavigate()
-    const { startGetBook } = useBooks()
+    const { startGetBook, onDeleteBook } = useBooks()
 
-    const onEditBook = () => {
+    const startEditBook = () => {
         startGetBook(book.id)
         navigate(`/update-book/${book.id}`)
     }
+
+    const startDeletBook = () => {
+        onDeleteBook(book.id)
+    }
+
+    const { genero } = book.categories;
  
     return (
   
@@ -29,7 +35,6 @@ export const AdminCardBook = ({ book }) => {
                     justifyContent: 'center',
                     cursor: 'pointer'
                 }}
-                onClick={onEditBook}
             >
                 <Stack
                     spacing={1}
@@ -37,7 +42,7 @@ export const AdminCardBook = ({ book }) => {
                     justifyContent='center'
                 >
                     <img
-                        src={book.image}
+                        src={book.coverImage}
                         alt={book.title}
                         loading="lazy"
                         style={{
@@ -73,6 +78,7 @@ export const AdminCardBook = ({ book }) => {
                     <IconButton
                         color='warning'
                         size='large'
+                        onClick={startEditBook}
                     >
                         <EditIcon />
                     </IconButton>
@@ -80,6 +86,7 @@ export const AdminCardBook = ({ book }) => {
                     <IconButton
                         color='error'
                         size='large'
+                        onClick={startDeletBook}
                     >
                         <DeleteIcon />
                     </IconButton>
@@ -93,8 +100,18 @@ export const AdminCardBook = ({ book }) => {
                     {book.author}
                 </Typography>
 
+                <Box
+                    sx={{
+                        marginTop: 2,
+                    }}
+                >
+                    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                        <Chip label={genero} color="primary" />
+                    </Box>
+                </Box>
+
                 <Typography variant="body1" component="p">
-                    {book.description}
+                    {book.synapsis}
                 </Typography>
             </Grid>
         </Grid>

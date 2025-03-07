@@ -1,18 +1,14 @@
 import { useBooks } from "../../../hooks";
 import { Box, Chip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { useNavigate } from "react-router-dom";
 
 export const BookCard = ({ book }) => {
 
     const { startGetBook, userBooks } = useBooks();
-    const navigate = useNavigate();
 
-    const slugBook = book.title.toLowerCase().replace(/ /g, '-');
-
-    const handleBookClick = () => {
-        startGetBook(book.id);
-        navigate(`/book/${slugBook}`);
+    const handleBookClick = async() => {
+        const slugBook = book.title.toLowerCase().replace(/ /g, '-');
+        startGetBook(book.id, slugBook);
     }
   
     return (
@@ -34,7 +30,7 @@ export const BookCard = ({ book }) => {
                 }}
             >
                 <img
-                    src={book.image}
+                    src={book.coverImage}
                     alt={book.title}
                     loading="lazy"
                     style={{

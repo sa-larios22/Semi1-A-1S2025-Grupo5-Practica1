@@ -1,9 +1,16 @@
+import { useEffect } from 'react';
 import { useBooks } from '../../../hooks';
 import { BookCard } from './BookCard';
 
 export const BooksGrid = () => {
 
-    const { books } = useBooks();
+    const { books, startGetBooks } = useBooks();
+
+    useEffect(() => {
+        startGetBooks();
+    }
+    , [])
+
 
     return (
         <>

@@ -6,8 +6,13 @@ import { generateRandomColor } from '../../helpers';
 
 export const Book = () => {
 
-  const { book } = useBooks();
+  const { book, startBuyBook } = useBooks();
 
+  const handleBuyBook = () => {
+    startBuyBook(book.id);
+  }
+
+  const {genero} = book.categories;
   return (
     <Grid 
       container spacing={3}
@@ -20,7 +25,7 @@ export const Book = () => {
     >
       <Grid item size={4}>
         <img
-          src={book.image}
+          src={book.coverImage}
           alt={book.title}
           loading="lazy"
           style={{
@@ -33,7 +38,13 @@ export const Book = () => {
       </Grid>
 
       <Grid item size={8}>
-        <Stack spacing={2}>
+        <Stack spacing={2}
+          sx={{
+            padding: '10px',
+            width: '100%',
+            overflowX: 'hidden',
+          }}
+        >
           <Typography variant="h3" component="h3"
             sx={{
               color: 'text.primary',
@@ -49,25 +60,25 @@ export const Book = () => {
           >
             {book.author}
           </Typography>
-          <Typography variant="body1" component="p">
-            {book.description}
+
+          <Typography variant="body1" component="p"
+            sx={{
+              color: 'text.primary',
+            }}
+          >
+            {book.synopsis}
           </Typography>
 
           <Stack direction="row" spacing={1}>
-            {
-              book.category.map((cat, idx) => (
-                <Chip
-                  key={idx}
-                  label={cat} 
-                  size="small"
-                  variant="outlined"
-                  sx={{
-                    color: `${generateRandomColor()}`,
-                    borderColor: `${generateRandomColor()}`,
-                  }}
-                />
-              ))
-            }
+            <Chip
+              label={genero} 
+              size="small"
+              variant="outlined"
+              sx={{
+                color: `${generateRandomColor()}`,
+                borderColor: `${generateRandomColor()}`,
+              }}
+            />
           </Stack>
 
 
@@ -88,6 +99,7 @@ export const Book = () => {
             color: 'white',
           }}
           size='large'
+          onClick={handleBuyBook}
         >
           Agregar a mis libros
         </Button>

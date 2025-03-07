@@ -1,6 +1,13 @@
 import { Box, Button, Typography } from '@mui/material';
+import { useBooks } from '../../../hooks';
 
 export const MyBookCard = ({ book }) => {
+
+    const { startReadBook } = useBooks();
+
+    const handleBookClick = async() => {
+        startReadBook(book.id);
+    }
   
     return (
         <Box
@@ -11,7 +18,7 @@ export const MyBookCard = ({ book }) => {
             }}
         >
             <img
-                src={book.image}
+                src={book.coverImage}
                 alt={book.title}
                 loading="lazy"
                 style={{
@@ -46,6 +53,7 @@ export const MyBookCard = ({ book }) => {
                     width: '100%'
                 }}
                 size="large"
+                onClick={handleBookClick}
             >
                 Leer
             </Button>

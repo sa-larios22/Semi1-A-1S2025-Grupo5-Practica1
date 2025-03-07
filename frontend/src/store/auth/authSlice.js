@@ -9,7 +9,7 @@ export const META_AUTH = {
 export const authSlice = createSlice({
     name: 'auth',
     initialState: {
-        status: META_AUTH.AUTHENTICATED,
+        status: META_AUTH.UNAUTHENTICATED,
         user: {
             id: 1,
             name: 'Admin',

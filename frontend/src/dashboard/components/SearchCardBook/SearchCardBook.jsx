@@ -64,7 +64,7 @@ export const SearchCardBook = ({ book }) => {
                 </Typography>
 
                 <Typography variant="body1" component="p">
-                    {book.description}
+                    {book.synapsis}
                 </Typography>
             </Grid>
         </Grid>

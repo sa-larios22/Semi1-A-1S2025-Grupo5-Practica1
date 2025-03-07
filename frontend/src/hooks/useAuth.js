@@ -9,55 +9,59 @@ export const useAuth = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const startLogin = async({ email, password }) => {
-       /* 
+    const startLogin = async({ email, password }) => { 
         dispatch(onChecking());
 
         try {
             const { data } = await appApi.post('/auth/login', { email, password });
-            
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('token-init-date', new Date().getTime());
+
+            localStorage.setItem('auth-status', true);
 
             dispatch( onLogin({
-                id: data.id,
-                email: data.email,
-                name: data.name,
-                lastname: data.lastname,
-                username: data.username,
-                role: data.role,
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.firstName,
+                lastname: data.user.lastName,
+                role: data.user.role,
+                profilePicture: data.user.profilePicture,
             }));
 
+            navigate('/');
         } catch (error) {
             console.log(error);
 
         }
-        */
     }
 
-    const startCheckToken = async() => {
-        /* 
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            return dispatch(onLogout());
-        }
-
+    const startRegisterUser = async({ name, lastname, email, password, yyymmdd, image}) => {
         try {
-            
-            // const { data } = await appApi.get('auth/check-status');
 
-            // localStorage.setItem('token', data.token);
-            // localStorage.setItem('token-init-date', new Date().getTime());
+            console.log(name, lastname, email, password, yyymmdd, image, "USER");
+            const formData = new FormData();
+            formData.append("file", image);
+            const response = await appApi.post("auth/upload-profile-picture", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
 
-            dispatch( onLogin({}));
+            if (response.data.status !== 201) {
+                return;
+            }
+        
+            const profilePicture = response.data.url;
 
-            navigate('/dashboard');
+            const res = await appApi.post('/auth/register', { firstName: name, lastName: lastname, email, password, birthDate: yyymmdd, profilePicture, role: "USER" });
 
+            if (res.data.message === "Usuario registrado exitosamente") {
+                navigate('/login');
+            }
+            navigate('/register');
+            return;
         } catch (error) {
             console.log(error);
+            return;
         }
-*/
     }
 
     const startLogOut = () => {
@@ -69,8 +73,8 @@ export const useAuth = () => {
         status,
         user,
         startLogin,
-        startCheckToken,
-        startLogOut
+        startLogOut,
+        startRegisterUser
     }
 
 }

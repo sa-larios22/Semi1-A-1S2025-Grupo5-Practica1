@@ -6,7 +6,7 @@ import { useAuth } from '../../hooks';
 export const Profile = () => {
     const { user } = useAuth();
 
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState(user.profilePicture);
     const [name, setName] = useState(user.name);
     const [lastname, setLastname] = useState(user.lastname);
     const [email, setEmail] = useState(user.email);

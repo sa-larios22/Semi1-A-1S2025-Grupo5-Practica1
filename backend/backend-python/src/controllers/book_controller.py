@@ -16,6 +16,9 @@ class BookCreate(BaseModel):
     categories: dict 
     year: int
     pdfUrl: str
+    
+class BookResponse(BookCreate):
+    id: int 
 
 @router.post("/books")
 async def create_book(book_data: BookCreate):
@@ -42,7 +45,7 @@ async def create_book(book_data: BookCreate):
     await db.disconnect()
     return {"message": "Libro creado exitosamente", "book_id": new_book.id}
 
-@router.get("/books", response_model=List[BookCreate])
+@router.get("/books", response_model=List[BookResponse])
 async def get_books():
     """Obtener todos los libros"""
     await db.connect()
@@ -57,7 +60,7 @@ async def get_books():
     return books
 
 @router.get("/books/{book_id}")
-async def get_book(book_id: int):
+async def get_book(book_id: int, response_model=List[BookResponse]):
     """Obtener un libro por ID"""
     await db.connect()
     book = await db.book.find_unique(where={"id": book_id})

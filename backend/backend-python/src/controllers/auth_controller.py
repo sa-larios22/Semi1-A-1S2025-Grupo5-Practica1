@@ -1,8 +1,30 @@
 from fastapi import APIRouter, HTTPException
+from fastapi import File, UploadFile
+from botocore.exceptions import ClientError
+import os
 from pydantic import BaseModel
 import bcrypt
+import boto3
 from prisma import Prisma
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Cargar variables desde .env
+load_dotenv()
+
+# Obtener valores de las variables de entorno
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_REGION = os.getenv("AWS_REGION")
+BUCKET_NAME = os.getenv("BUCKET_NAME")
+
+# Inicializar cliente de S3 con credenciales desde .env
+s3_client = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION
+)
 
 router = APIRouter()
 db = Prisma()
@@ -86,3 +108,17 @@ async def login(user_data: UserLogin):
             "role": user.role
         }
     }
+
+# Upload a Profile Picture to a S3 Bucket
+@router.post("/auth/upload-profile-picture")
+async def upload_profile_picture(file: UploadFile):
+    try:
+        # Subir el archivo a S3
+        s3_client.upload_fileobj(file.file, BUCKET_NAME, file.filename)
+
+        # URL del archivo en S3
+        file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{file.filename}"
+
+        return {"status": 201, "url": file_url}
+    except Exception as e:
+        return {"error": str(e)}

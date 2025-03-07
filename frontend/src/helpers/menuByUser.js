@@ -1,22 +1,22 @@
 export const menu = [
     {
         title: 'Inicio',
-        roles: ['admin', 'user'],
+        roles: ['ADMIN', 'USER'],
         url: '/'
     },
     {
         title: 'Mi Perfil',
-        roles: ['admin', 'user'],
+        roles: ['ADMIN', 'USER'],
         url: '/profile'
     },
     {
         title: 'Mis Libros',
-        roles: ['admin', 'user'],
+        roles: ['ADMIN', 'USER'],
         url: '/books'
     },
     {
         title: 'Administrar Libros',
-        roles: ['admin'],
+        roles: ['ADMIN'],
         url: '/admin-books'
     },
 ]

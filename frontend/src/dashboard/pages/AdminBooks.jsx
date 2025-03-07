@@ -2,10 +2,21 @@ import { Box, Button, Stack } from '@mui/material'
 import Grid from '@mui/material/Grid2';
 import { useBooks } from '../../hooks';
 import { AdminCardBook } from '../components';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const AdminBooks = () => {
 
-    const { books } = useBooks();
+    const { books, startGetBooks } = useBooks();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        startGetBooks();
+    }, [books])
+
+    const handleAddBook = () => {
+        navigate('/edit-book');
+    }
   
     return (
         <Box
@@ -36,6 +47,7 @@ export const AdminBooks = () => {
                     >
                         <Button
                             color='success'
+                            onClick={handleAddBook}
                         >
                             Agregar Libro
                         </Button>

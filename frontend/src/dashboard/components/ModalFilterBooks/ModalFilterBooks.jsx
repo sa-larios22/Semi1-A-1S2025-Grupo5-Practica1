@@ -26,7 +26,7 @@ const genres = [
     },
     {
         id: 6,
-        name: 'Misterio'
+        name: 'Educación'
     },
     {
         id: 7,

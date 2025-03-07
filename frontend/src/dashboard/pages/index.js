@@ -5,3 +5,4 @@ export * from './/EditBook';
 export * from './Home';
 export * from './Profile';
 export * from './SearchBooks';
+export * from './ViewBook';
