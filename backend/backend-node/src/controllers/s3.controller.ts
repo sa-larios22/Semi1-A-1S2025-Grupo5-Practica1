@@ -1,7 +1,7 @@
 import { Controller, Post, Delete, UploadedFile, UseInterceptors, Param, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { S3Service } from '../services/s3.service';
+import { S3Service } from '../s3.service';
 
 @Controller('s3')
 export class S3Controller {

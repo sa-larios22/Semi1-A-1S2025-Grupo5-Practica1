@@ -1,19 +1,26 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { UserRegisterDto } from './dto/user-register.dto';
+import { UserLoginDto } from './dto/user-login.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('auth') 
+@Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @Post('register') // Ruta para el registro
-  async register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto);
+  @Post('register')
+  register(@Body() userData: UserRegisterDto) {
+    return this.authService.register(userData);
   }
 
-  @Post('login') // Ruta para el login
-  async login(@Body() loginUserDto: LoginUserDto) {
-    return this.authService.login(loginUserDto);
+  @Post('login')
+  login(@Body() userData: UserLoginDto) {
+    return this.authService.login(userData);
+  }
+
+  @Post('upload-profile-picture')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadProfilePicture(@UploadedFile() file: Express.Multer.File) {
+    return this.authService.uploadProfilePicture(file);
   }
 }

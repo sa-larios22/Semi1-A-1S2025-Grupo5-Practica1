@@ -1,12 +1,15 @@
-import { IsString, IsInt, IsOptional, IsObject, IsArray } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsNumber, IsString } from 'class-validator';
 
 export class CreateBookDto {
+  @IsNotEmpty()
   @IsString()
   title: string;
 
+  @IsNotEmpty()
   @IsString()
   author: string;
 
+  @IsNotEmpty()
   @IsString()
   coverImage: string;
 
@@ -14,11 +17,14 @@ export class CreateBookDto {
   @IsString()
   synopsis?: string;
 
-  @IsObject()
-  categories: Record<string, any>; 
-  @IsInt()
+  @IsNotEmpty()
+  categories: any;
+
+  @IsNotEmpty()
+  @IsNumber()
   year: number;
 
+  @IsNotEmpty()
   @IsString()
   pdfUrl: string;
 }

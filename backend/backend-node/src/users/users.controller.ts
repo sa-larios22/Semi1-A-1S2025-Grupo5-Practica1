@@ -1,20 +1,18 @@
-import { Controller, Get, Put, Body, Param, Query, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Put, Query, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserUpdateDto } from './dto/user-update.dto';
 
-@Controller('api/users')
+@Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  // Obtener el perfil del usuario
   @Get('me')
   async getUser(@Query('email') email: string) {
-    return this.userService.getUserProfile(email);
+    return await this.usersService.getUser(email);
   }
 
-  // Actualizar el perfil del usuario
   @Put('me')
-  async updateUser(@Query('email') email: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.updateUserProfile(email, updateUserDto);
+  async updateUser(@Query('email') email: string, @Body() userData: UserUpdateDto) {
+    return await this.usersService.updateUser(email, userData);
   }
 }

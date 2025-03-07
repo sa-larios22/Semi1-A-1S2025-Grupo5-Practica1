@@ -1,18 +1,18 @@
-import { Controller, Post, Get, Param, Body } from '@nestjs/common';
-import { PurchaseService } from './purchase.service';
-import { CreatePurchaseDto } from './dto/create-purchase.dto';
+import { Controller, Post, Get, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
+import { PurchasesService } from './purchase.service';
+import { PurchaseCreateDto } from './dto/purchase-create.dto';
 
-@Controller('api/purchases')
-export class PurchaseController {
-  constructor(private readonly purchaseService: PurchaseService) {}
+@Controller('purchases')
+export class PurchasesController {
+  constructor(private readonly purchasesService: PurchasesService) {}
 
   @Post()
-  async createPurchase(@Body() createPurchaseDto: CreatePurchaseDto) {
-    return this.purchaseService.create(createPurchaseDto);
+  async createPurchase(@Body() purchaseData: PurchaseCreateDto) {
+    return await this.purchasesService.createPurchase(purchaseData);
   }
 
-  @Get(':user_id')
-  async getUserPurchases(@Param('user_id') userId: string) {
-    return this.purchaseService.findByUser(userId);
+  @Get(':userId')
+  async getUserPurchases(@Param('userId') userId: string) {
+    return await this.purchasesService.getUserPurchases(userId);
   }
 }

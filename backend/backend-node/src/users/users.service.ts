@@ -1,47 +1,35 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from '@prisma/client';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { UserUpdateDto } from './dto/user-update.dto';
+
+const prisma = new PrismaClient();
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
-
-  // Obtener el perfil del usuario
-  async getUserProfile(email: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
-
+  async getUser(email: string) {
+    const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
-
     return user;
   }
 
-  // Actualizar el perfil del usuario
-  async updateUserProfile(email: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const { firstName, lastName, profilePicture, birthDate } = updateUserDto;
-
-    // Verificar si el usuario existe
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+  async updateUser(email: string, userData: UserUpdateDto) {
+    try {
+      const updateData: any = { ...userData };
+      if (userData.birthDate) {
+        updateData.birthDate = new Date(userData.birthDate);
+      }
+  
+      const updatedUser = await prisma.user.update({
+        where: { email },
+        data: updateData,
+      });
+  
+      return { message: 'Perfil actualizado exitosamente', user: updatedUser };
+    } catch (error) {
+      throw new HttpException('No se pudo actualizar el usuario', HttpStatus.BAD_REQUEST);
     }
-
-    const updateData: any = {};
-    if (firstName) updateData.firstName = firstName;
-    if (lastName) updateData.lastName = lastName;
-    if (profilePicture) updateData.profilePicture = profilePicture;
-    if (birthDate) updateData.birthDate = new Date(birthDate); // Convierte birthDate a Date
-
-    return this.prisma.user.update({
-      where: { email },
-      data: updateData,
-    });
   }
+  
 }

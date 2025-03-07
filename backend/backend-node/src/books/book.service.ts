@@ -1,70 +1,76 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service'; 
+//SIN SUBIR DESDE S3
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
-export class BookService {
+export class BooksService {
   constructor(private prisma: PrismaService) {}
 
   async create(createBookDto: CreateBookDto) {
-    try {
-      return await this.prisma.book.create({
-        data: {
-          title: createBookDto.title,
-          author: createBookDto.author,
-          coverImage: createBookDto.coverImage,
-          synopsis: createBookDto.synopsis,
-          categories: JSON.stringify(createBookDto.categories), //string
-          year: createBookDto.year,
-          pdfUrl: createBookDto.pdfUrl,
-        },
-      });
-    } catch (error) {
-      throw new Error('Error al crear el libro');
-    }
+    return this.prisma.book.create({
+      data: {
+        ...createBookDto,
+        categories: JSON.stringify(createBookDto.categories),
+      },
+    });
   }
 
   async findAll() {
     const books = await this.prisma.book.findMany();
-    // Reconvertir las categorías en objetos si es que están guardadas como strings
     return books.map((book) => ({
       ...book,
-      categories: typeof book.categories === 'string' ? JSON.parse(book.categories) : book.categories,
+      categories: typeof book.categories === 'string' ? JSON.parse(book.categories) : [],
     }));
   }
 
-  async findOne(id: string) {
-    const book = await this.prisma.book.findUnique({ where: { id: Number(id) } });
-    if (!book) {
-      throw new NotFoundException('Libro no encontrado');
-    }
-    return book;
+  
+  async findOne(id: number) {
+    const book = await this.prisma.book.findUnique({ where: { id } });
+    if (!book) throw new Error('Libro no encontrado');
+    return {
+      ...book,
+      categories: typeof book.categories === 'string' ? JSON.parse(book.categories) : [],
+    };
   }
 
-  async update(id: string, createBookDto: CreateBookDto) {
-    try {
-      return await this.prisma.book.update({
-        where: { id: Number(id) },
-        data: {
-          title: createBookDto.title,
-          author: createBookDto.author,
-          coverImage: createBookDto.coverImage,
-          synopsis: createBookDto.synopsis,
-          categories: JSON.stringify(createBookDto.categories),
-          year: createBookDto.year,
-          pdfUrl: createBookDto.pdfUrl,
-        },
-      });
-    } catch (error) {
-      throw new Error('Error al actualizar el libro');
-    }
+  async update(id: number, updateBookDto: UpdateBookDto) {
+    return this.prisma.book.update({
+      where: { id },
+      data: {
+        ...updateBookDto,
+        categories: JSON.stringify(updateBookDto.categories),
+      },
+    });
   }
 
-  async remove(id: string) {
-    try {
-      return await this.prisma.book.delete({ where: { id: Number(id) } });
-    } catch (error) {
-      throw new NotFoundException('Libro no encontrado');
+  async remove(id: number) {
+    return this.prisma.book.delete({ where: { id } });
+  }
+
+  //BARRA DE BUSQUEDA - SEARCH
+  async searchBooks(title?: string, synopsis?: string) {
+    console.log('Título recibido:', title);
+    console.log('Sinopsis recibida:', synopsis);
+  
+    const filters: any = {};
+  
+    if (title) {
+      filters.title = { contains: title, mode: 'insensitive' };
     }
+  
+    if (synopsis) {
+      filters.synopsis = { contains: synopsis, mode: 'insensitive' };
+    }
+  
+    console.log('Filtros generados:', filters);
+  
+    const books = await this.prisma.book.findMany({ where: filters });
+  
+    return books.map((book) => ({
+      ...book,
+      categories: typeof book.categories === 'string' ? JSON.parse(book.categories) : [],
+    }));
   }
 }
